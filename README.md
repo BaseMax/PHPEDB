@@ -10,6 +10,7 @@ $db->connect("localhost", "username", "*****");
 $db->db="database_name";
 $db->create_database($db->db, false);
 ```
+[See more tests php file](/test/)
 
 ### Functions
 ```php
