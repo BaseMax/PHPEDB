@@ -1,6 +1,10 @@
 # PHP Easy Database
 
+## EDPHP
+
 PHP Easy DB (Database) is an easy library to manage and control the database.
+
+## PHPED
 
 ## Features
 
