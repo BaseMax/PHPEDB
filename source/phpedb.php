@@ -13,29 +13,29 @@ date_default_timezone_set('America/Los_Angeles');
 function error_page($error)
 {
 	$style="";
-    // $style="
-    // <style>
-    // @font-face
-    // {
-    //   font-family:'site1';
-    //   src:url('fonts/site1.woff') format('woff'),
-    //       url('fonts/site1.ttf') format('truetype');
-    //   font-weight:normal;
-    // }
-    // @font-face
-    // {
-    //   font-family:'site2';
-    //   src:url('fonts/site2.woff') format('woff'),
-    //       url('fonts/site2.ttf') format('truetype');
-    //   font-weight:bold;
-    // }
-    // body
-    // {
-    // 	direction: rtl;
-    // 	font-family:'site1';
-    // }
-    // </style>
-    // ";
+	// $style="
+	// <style>
+	// @font-face
+	// {
+	// 	font-family:'site1';
+	// 	src:url('fonts/site1.woff') format('woff'),
+	// 	    url('fonts/site1.ttf') format('truetype');
+	// 	font-weight:normal;
+	// }
+	// @font-face
+	// {
+	// 	font-family:'site2';
+	// 	src:url('fonts/site2.woff') format('woff'),
+	// 	    url('fonts/site2.ttf') format('truetype');
+	// 	font-weight:bold;
+	// }
+	// body
+	// {
+	// 	direction: rtl;
+	// 	font-family:'site1';
+	// }
+	// </style>
+	// ";
 	exit("<meta charset=\"utf-8\">".$style."<br><br><center><h1>Error : ".$error."</h1></center>");
 }
 class database
@@ -128,7 +128,7 @@ class database
 			$sql.=";";
 			if(trim($__sql) !="")
 			{
-			    $sql=$__sql;
+				$sql=$__sql;
 			}
 			//print $sql."\n";
 			$stmt = $this->database->prepare($sql);
@@ -339,7 +339,7 @@ class database
 				}
 			}
 			$stmt->execute();
-		    return $this->database->lastInsertId();
+			return $this->database->lastInsertId();
 		}
 		catch(PDOException $e)
 		{
@@ -419,10 +419,10 @@ class database
 }
 // function convert($string)
 // {
-//     $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-//     $arabic = ['٩', '٨', '٧', '٦', '٥', '٤', '٣', '٢', '١','٠'];
-//     $num = range(0, 9);
-//     $convertedPersianNums = str_replace($persian, $num,$string);
-//     $englishNumbersOnly = str_replace($arabic, $num, $convertedPersianNums);
-//     return $englishNumbersOnly;
+// 	$persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+// 	$arabic = ['٩', '٨', '٧', '٦', '٥', '٤', '٣', '٢', '١','٠'];
+// 	$num = range(0, 9);
+// 	$convertedPersianNums = str_replace($persian, $num,$string);
+// 	$englishNumbersOnly = str_replace($arabic, $num, $convertedPersianNums);
+// 	return $englishNumbersOnly;
 // }
