@@ -37,3 +37,17 @@ function delete($table, $clause=[]) {...}
 function insert($table, $values) {...}
 function update($table, $clause, $values) {...}
 ```
+
+## Example
+
+```
+$count=$db->count("account", $clauses);
+
+$accountID=$db->insert("account", $values);
+
+$result=$db->selectRaw("SELECT floor(avg(value)) as star FROM `$db->db`.`rate` WHERE `postID` = " . $id);
+
+$result=$db->selectsRaw("SELECT * FROM `$db->db`.`account` INNER JOIN `$db->db`.`team` ON account.id = team.accountID WHERE team.postID=". $id .";");
+
+$result=$db->selectsRaw("SELECT `accountID` FROM `$db->db`.`rate` WHERE `postID`=". $id ." ORDER BY `id`,`value` DESC LIMIT 4");
+```
