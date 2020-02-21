@@ -36,6 +36,8 @@ function count($table, $clause=[]) {...}
 function delete($table, $clause=[]) {...}
 function insert($table, $values) {...}
 function update($table, $clause, $values) {...}
+function selectRaw($query) {...}
+function selectsRaw($query) {...}
 ```
 
 ## Example
