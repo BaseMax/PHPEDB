@@ -23,6 +23,7 @@ $db->create_database($db->db, false);
 [See more tests php file](/test/)
 
 ### Functions
+
 ```php
 function connect($host="localhost", $user="root", $pass="") {...}
 function check() {...}
@@ -35,5 +36,4 @@ function count($table, $clause=[]) {...}
 function delete($table, $clause=[]) {...}
 function insert($table, $values) {...}
 function update($table, $clause, $values) {...}
-
 ```
