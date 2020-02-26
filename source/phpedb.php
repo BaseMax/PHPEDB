@@ -4,44 +4,19 @@
  * @Name : phpedb.php
  * @Version : 1.0
  * @Programmer : Max
- * @Date : 2016-2019, 2019-07-10
+ * @Date : 2016-2019, 2019-07-10, 2020-02-26
  * @Released under : https://github.com/BaseMax/PHPEDB/blob/master/LICENSE
  * @Repository : https://github.com/BaseMax/PHPEDB
  *
  **/
-date_default_timezone_set('America/Los_Angeles');
-function error_page($error)
-{
-	$style="";
-	// $style="
-	// <style>
-	// @font-face
-	// {
-	// 	font-family:'site1';
-	// 	src:url('fonts/site1.woff') format('woff'),
-	// 	    url('fonts/site1.ttf') format('truetype');
-	// 	font-weight:normal;
-	// }
-	// @font-face
-	// {
-	// 	font-family:'site2';
-	// 	src:url('fonts/site2.woff') format('woff'),
-	// 	    url('fonts/site2.ttf') format('truetype');
-	// 	font-weight:bold;
-	// }
-	// body
-	// {
-	// 	direction: rtl;
-	// 	font-family:'site1';
-	// }
-	// </style>
-	// ";
-	exit("<meta charset=\"utf-8\">".$style."<br><br><center><h1>Error : ".$error."</h1></center>");
-}
 class database
 {
 	public $database=null;
 	public $db="";
+	private function error_page($error)
+	{
+		exit("<meta charset=\"utf-8\"><br><br><center><h1>Error : ".$error."</h1></center>");
+	}
 	public function connect($host="localhost",$user="root",$pass="")
 	{
 		try
@@ -53,7 +28,7 @@ class database
 		catch(PDOException $e)
 		{
 			$this->database=null;
-			error_page($e->getMessage());
+			$this->error_page($e->getMessage());
 		}
 	}
 	public function check()
@@ -78,7 +53,7 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			error_page($e->getMessage());
+			$this->error_page($e->getMessage());
 		}
 	}
 	public function selectsRaw($query)
@@ -91,7 +66,7 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			error_page($e->getMessage());
+			$this->error_page($e->getMessage());
 		}
 	}
 	public function query($query,$error=true)
@@ -104,7 +79,7 @@ class database
 		{
 			if($error == true)
 			{
-				error_page($e->getMessage());
+				$this->error_page($e->getMessage());
 			}
 		}
 	}
@@ -118,7 +93,7 @@ class database
 		{
 			if($error == true)
 			{
-				error_page($e->getMessage());
+				$this->error_page($e->getMessage());
 			}
 		}
 	}
@@ -177,7 +152,7 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			error_page($e->getMessage());
+			$this->error_page($e->getMessage());
 		}
 	}
 	public function select($table,$clause=[],$after="")
@@ -229,7 +204,7 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			error_page($e->getMessage());
+			$this->error_page($e->getMessage());
 		}
 	}
 	public function count($table,$clause=[])
@@ -280,7 +255,7 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			error_page($e->getMessage());
+			$this->error_page($e->getMessage());
 		}
 	}
 	public function delete($table,$clause=[])
@@ -330,7 +305,7 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			error_page($e->getMessage());
+			$this->error_page($e->getMessage());
 		}
 	}
 	public function insert($table,$values)
@@ -369,7 +344,7 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			error_page($e->getMessage());
+			$this->error_page($e->getMessage());
 		}
 	}
 	public function update($table,$clause,$values)
@@ -439,16 +414,7 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			error_page($e->getMessage());
+			$this->error_page($e->getMessage());
 		}
 	}
 }
-// function convert($string)
-// {
-// 	$persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-// 	$arabic = ['٩', '٨', '٧', '٦', '٥', '٤', '٣', '٢', '١','٠'];
-// 	$num = range(0, 9);
-// 	$convertedPersianNums = str_replace($persian, $num,$string);
-// 	$englishNumbersOnly = str_replace($arabic, $num, $convertedPersianNums);
-// 	return $englishNumbersOnly;
-// }
