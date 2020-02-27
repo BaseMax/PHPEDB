@@ -43,32 +43,6 @@ class database
 	{
 		$this->database=null;
 	}
-	public function selectRaw($query)
-	{
-		try
-		{
-			$stmt = $this->database->prepare($query);
-			$stmt->execute();
-			return $stmt->fetch(PDO::FETCH_ASSOC);
-		}
-		catch(PDOException $e)
-		{
-			$this->error_page($e->getMessage());
-		}
-	}
-	public function selectsRaw($query)
-	{
-		try
-		{
-			$stmt = $this->database->prepare($query);
-			$stmt->execute();
-			return $stmt->fetchAll(PDO::FETCH_ASSOC);
-		}
-		catch(PDOException $e)
-		{
-			$this->error_page($e->getMessage());
-		}
-	}
 	public function query($query,$error=true)
 	{
 		try
