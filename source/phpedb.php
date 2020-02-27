@@ -2,9 +2,9 @@
 /**
  *
  * @Name : phpedb.php
- * @Version : 1.0
+ * @Version : 1.1
  * @Programmer : Max
- * @Date : 2016-2019, 2019-07-10, 2020-02-26
+ * @Date : 2016-2019, 2019-07-10, 2020-02-26, 2020-02-27
  * @Released under : https://github.com/BaseMax/PHPEDB/blob/master/LICENSE
  * @Repository : https://github.com/BaseMax/PHPEDB
  *
@@ -201,6 +201,56 @@ class database
 			}
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_ASSOC);
+		}
+		catch(PDOException $e)
+		{
+			$this->error_page($e->getMessage());
+		}
+	}
+	public function sum($table, $column, $clause=[]) {
+		try
+		{
+			$sql = "select SUM(".$column.") FROM `".$this->db."`.`".$table."` ";
+			$current=0;
+			$count=count($clause);
+			if(count($clause) > 0)
+			{
+				$sql.=" WHERE ";
+				foreach($clause as $name=>$value)
+				{
+					$operator="=";
+					$do="and";
+					if(is_array($value))
+					{
+						$operator=$value[0];
+						$do=$value[1];
+						$value=$value[2];
+					}
+					$sql.=$name . " ". $operator ." ? ";
+					if($current != $count-1)
+					{
+						$sql.=" ".$do." ";
+					}
+					$current++;
+				}
+			}
+			$sql.=";";
+			$stmt = $this->database->prepare($sql);
+			$current_all=1;
+			if(count($clause) > 0)
+			{
+				foreach($clause as $name=>$value)
+				{
+					if(is_array($value))
+					{
+						$value=$value[2];
+					}
+					$stmt->bindValue($current_all,$value,PDO::PARAM_STR);
+					$current_all++;
+				}
+			}
+			$stmt->execute();
+			return $stmt->fetchColumn(0);
 		}
 		catch(PDOException $e)
 		{
