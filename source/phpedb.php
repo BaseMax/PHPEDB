@@ -4,7 +4,7 @@
  * @Name : phpedb.php
  * @Version : 1.1
  * @Programmer : Max
- * @Date : 2016-2019, 2019-07-10, 2020-02-26, 2020-02-27
+ * @Date : 2016-2019, 2019-07-10, 2020-02-26, 2020-02-27, 2020-03-30
  * @Released under : https://github.com/BaseMax/PHPEDB/blob/master/LICENSE
  * @Repository : https://github.com/BaseMax/PHPEDB
  *
@@ -97,11 +97,11 @@ class database
 			}
 		}
 	}
-	public function selects($table,$clause=[],$after="",$__sql="")
+	public function selects($table,$clause=[],$after="",$fields="*")
 	{
 		try
 		{
-			$sql = "SELECT * FROM `".$this->db."`.`".$table."` ";
+			$sql = "SELECT ".$fields." FROM `".$this->db."`.`".$table."` ";
 			$current=0;
 			$count=count($clause);
 			if(count($clause) > 0)
@@ -127,10 +127,6 @@ class database
 			}
 			$sql.=" ". $after." ";
 			$sql.=";";
-			if(trim($__sql) !="")
-			{
-				$sql=$__sql;
-			}
 			//print $sql."\n";
 			$stmt = $this->database->prepare($sql);
 			$current_all=1;
@@ -155,11 +151,11 @@ class database
 			$this->error_page($e->getMessage());
 		}
 	}
-	public function select($table,$clause=[],$after="")
+	public function select($table,$clause=[],$after="", $fields="*")
 	{
 		try
 		{
-			$sql = "SELECT * FROM `".$this->db."`.`".$table."` ";
+			$sql = "SELECT ".$fields." FROM `".$this->db."`.`".$table."` ";
 			$current=0;
 			$count=count($clause);
 			if(count($clause) > 0)
@@ -200,7 +196,11 @@ class database
 				}
 			}
 			$stmt->execute();
-			return $stmt->fetch(PDO::FETCH_ASSOC);
+			$data=$stmt->fetch(PDO::FETCH_ASSOC);
+			if($data == null || $data == "") {
+				return [];
+			}
+			return $data;
 		}
 		catch(PDOException $e)
 		{
