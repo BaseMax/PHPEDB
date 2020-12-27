@@ -257,6 +257,19 @@ class database
 			$this->error_page($e->getMessage());
 		}
 	}
+	public function countRaw($sql)
+	{
+		try
+		{
+			$stmt = $this->database->prepare($sql);
+			$stmt->execute();
+			return $stmt->fetchColumn(0);
+		}
+		catch(PDOException $e)
+		{
+			$this->error_page($e->getMessage());
+		}
+	}
 	public function count($table,$clause=[])
 	{
 		try
