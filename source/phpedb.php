@@ -314,7 +314,7 @@ class database
 				}
 			}
 			$stmt->execute();
-			return $stmt->fetchColumn(0);
+			return (int) $stmt->fetchColumn(0);
 		}
 		catch(PDOException $e)
 		{
