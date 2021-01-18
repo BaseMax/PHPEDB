@@ -2,9 +2,9 @@
 /**
  *
  * @Name : phpedb.php
- * @Version : 1.1
+ * @Version : 1.2
  * @Programmer : Max
- * @Date : 2016-2019, 2019-07-10, 2020-02-26, 2020-02-27, 2020-03-30
+ * @Date : 2016-2019, 2019-07-10, 2020-02-26, 2020-02-27, 2020-03-30, 2021-0-18
  * @Released under : https://github.com/BaseMax/PHPEDB/blob/master/LICENSE
  * @Repository : https://github.com/BaseMax/PHPEDB
  *
@@ -15,6 +15,7 @@ class database
 	public $db="";
 	private function error_page($error)
 	{
+	    debug_print_backtrace();
 		exit("<meta charset=\"utf-8\"><br><br><center><h1>Error : ".$error."</h1></center>");
 	}
 	public function connect($host="localhost",$user="root",$pass="")
@@ -117,7 +118,13 @@ class database
 						$do=$value[1];
 						$value=$value[2];
 					}
-					$sql.=$name . " ". $operator ." ? ";
+                    $sql.=$name . " ". $operator ." ";
+                    if($operator == "IS" || $operator == "is") {
+                        $sql.=$value;
+                    }
+                    else {
+                        $sql.="? ";
+                    }
 					if($current != $count-1)
 					{
 						$sql.=" ".$do." ";
@@ -134,6 +141,9 @@ class database
 			{
 				foreach($clause as $name=>$value)
 				{
+                    if($value[0] == "is" || $value[0] == "IS") {
+                        continue;
+                    }
 					if(is_array($value))
 					{
 						$value=$value[2];
@@ -171,7 +181,13 @@ class database
 						$do=$value[1];
 						$value=$value[2];
 					}
-					$sql.=$name . " ". $operator ." ? ";
+                    $sql.=$name . " ". $operator ." ";
+                    if($operator == "IS" || $operator == "is") {
+                        $sql.=$value;
+                    }
+                    else {
+                        $sql.="? ";
+                    }
 					if($current != $count-1)
 					{
 						$sql.=" ".$do." ";
@@ -187,6 +203,9 @@ class database
 			{
 				foreach($clause as $name=>$value)
 				{
+				    if($value[0] == "is" || $value[0] == "IS") {
+				        continue;
+				    }
 					if(is_array($value))
 					{
 						$value=$value[2];
@@ -257,19 +276,6 @@ class database
 			$this->error_page($e->getMessage());
 		}
 	}
-	public function countRaw($sql)
-	{
-		try
-		{
-			$stmt = $this->database->prepare($sql);
-			$stmt->execute();
-			return $stmt->fetchColumn(0);
-		}
-		catch(PDOException $e)
-		{
-			$this->error_page($e->getMessage());
-		}
-	}
 	public function count($table,$clause=[])
 	{
 		try
@@ -290,7 +296,13 @@ class database
 						$do=$value[1];
 						$value=$value[2];
 					}
-					$sql.=$name . " ". $operator ." ? ";
+    				$sql.=$name . " ". $operator ." ";
+					if($operator == "IS" || $operator == "is") {
+    					$sql.=$value;
+					}
+					else {
+    					$sql.="? ";
+					}
 					if($current != $count-1)
 					{
 						$sql.=" ".$do." ";
@@ -299,16 +311,21 @@ class database
 				}
 			}
 			$sql.=";";
+// 			print $sql."\n";
 			$stmt = $this->database->prepare($sql);
 			$current_all=1;
 			if(count($clause) > 0)
 			{
 				foreach($clause as $name=>$value)
 				{
+				    if($value[0] == "is" || $value[0] == "IS") {
+				        continue;
+				    }
 					if(is_array($value))
 					{
 						$value=$value[2];
 					}
+				// 	print "-->". $value."\n";
 					$stmt->bindValue($current_all,$value,PDO::PARAM_STR);
 					$current_all++;
 				}
@@ -341,7 +358,13 @@ class database
 						$do=$value[1];
 						$value=$value[2];
 					}
-					$sql.=$name . " ". $operator ." ? ";
+    				$sql.=$name . " ". $operator ." ";
+					if($operator == "IS" || $operator == "is") {
+    					$sql.=$value;
+					}
+					else {
+    					$sql.="? ";
+					}
 					if($current != $count-1)
 					{
 						$sql.=" ".$do." ";
@@ -356,6 +379,9 @@ class database
 			{
 				foreach($clause as $name=>$value)
 				{
+				    if($value[0] == "is" || $value[0] == "IS") {
+				        continue;
+				    }
 					if(is_array($value))
 					{
 						$value=$value[2];
