@@ -4,20 +4,24 @@
  * @Name : phpedb.php
  * @Version : 1.2
  * @Programmer : Max
- * @Date : 2016-2019, 2019-07-10, 2020-02-26, 2020-02-27, 2020-03-30, 2021-0-18
+ * @Date : 2016-2019, 2019-07-10, 2020-02-26, 2020-02-27, 2020-03-30, 2021-01-10, 2021-03-25
  * @Released under : https://github.com/BaseMax/PHPEDB/blob/master/LICENSE
  * @Repository : https://github.com/BaseMax/PHPEDB
  *
  **/
 class database
 {
+
 	public $database=null;
+
 	public $db="";
-	private function error_page($error)
+
+	private function error_page($error, $sql="")
 	{
-	    debug_print_backtrace();
-		exit("<meta charset=\"utf-8\"><br><br><center><h1>Error : ".$error."</h1></center>");
+		debug_print_backtrace();
+		exit("<meta charset=\"utf-8\"><br><br><center><h1>Error : ".$error."\n".$sql."</h1></center>");
 	}
+
 	public function connect($host="localhost",$user="root",$pass="")
 	{
 		try
@@ -29,9 +33,10 @@ class database
 		catch(PDOException $e)
 		{
 			$this->database=null;
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
+
 	public function check()
 	{
 		if($this->database == null)
@@ -40,10 +45,12 @@ class database
 		}
 		return true;
 	}
+
 	public function disconnect()
 	{
 		$this->database=null;
 	}
+
 	public function selectRaw($query)
 	{
 		try
@@ -54,9 +61,10 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
+
 	public function selectsRaw($query)
 	{
 		try
@@ -67,9 +75,10 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
+
 	public function query($query,$error=true)
 	{
 		try
@@ -80,10 +89,11 @@ class database
 		{
 			if($error == true)
 			{
-				$this->error_page($e->getMessage());
+				$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 			}
 		}
 	}
+
 	public function create_database($name,$error=true)
 	{
 		try
@@ -94,10 +104,11 @@ class database
 		{
 			if($error == true)
 			{
-				$this->error_page($e->getMessage());
+				$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 			}
 		}
 	}
+
 	public function selects($table,$clause=[],$after="",$fields="*")
 	{
 		try
@@ -118,13 +129,13 @@ class database
 						$do=$value[1];
 						$value=$value[2];
 					}
-                    $sql.=$name . " ". $operator ." ";
-                    if($operator == "IS" || $operator == "is") {
-                        $sql.=$value;
-                    }
-                    else {
-                        $sql.="? ";
-                    }
+					$sql.=$name . " ". $operator ." ";
+					if($operator == "IS" || $operator == "is") {
+						$sql.=$value;
+					}
+					else {
+						$sql.="? ";
+					}
 					if($current != $count-1)
 					{
 						$sql.=" ".$do." ";
@@ -134,18 +145,17 @@ class database
 			}
 			$sql.=" ". $after." ";
 			$sql.=";";
-			//print $sql."\n";
 			$stmt = $this->database->prepare($sql);
 			$current_all=1;
 			if(count($clause) > 0)
 			{
 				foreach($clause as $name=>$value)
 				{
-                    if($value[0] == "is" || $value[0] == "IS") {
-                        continue;
-                    }
 					if(is_array($value))
 					{
+						if($value[0] == "is" || $value[0] == "IS") {
+							continue;
+						}
 						$value=$value[2];
 					}
 					$stmt->bindValue($current_all,$value,PDO::PARAM_STR);
@@ -158,9 +168,10 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
+
 	public function select($table,$clause=[],$after="", $fields="*")
 	{
 		try
@@ -181,13 +192,13 @@ class database
 						$do=$value[1];
 						$value=$value[2];
 					}
-                    $sql.=$name . " ". $operator ." ";
-                    if($operator == "IS" || $operator == "is") {
-                        $sql.=$value;
-                    }
-                    else {
-                        $sql.="? ";
-                    }
+					$sql.=$name . " ". $operator ." ";
+					if($operator == "IS" || $operator == "is") {
+						$sql.=$value;
+					}
+					else {
+						$sql.="? ";
+					}
 					if($current != $count-1)
 					{
 						$sql.=" ".$do." ";
@@ -203,11 +214,11 @@ class database
 			{
 				foreach($clause as $name=>$value)
 				{
-				    if($value[0] == "is" || $value[0] == "IS") {
-				        continue;
-				    }
 					if(is_array($value))
 					{
+						if($value[0] == "is" || $value[0] == "IS") {
+							continue;
+						}
 						$value=$value[2];
 					}
 					$stmt->bindValue($current_all,$value,PDO::PARAM_STR);
@@ -223,9 +234,10 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
+
 	public function sum($table, $column, $clause=[]) {
 		try
 		{
@@ -273,9 +285,10 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
+
 	public function count($table,$clause=[])
 	{
 		try
@@ -296,12 +309,12 @@ class database
 						$do=$value[1];
 						$value=$value[2];
 					}
-    				$sql.=$name . " ". $operator ." ";
+					$sql.=$name . " ". $operator ." ";
 					if($operator == "IS" || $operator == "is") {
-    					$sql.=$value;
+						$sql.=$value;
 					}
 					else {
-    					$sql.="? ";
+						$sql.="? ";
 					}
 					if($current != $count-1)
 					{
@@ -311,21 +324,19 @@ class database
 				}
 			}
 			$sql.=";";
-// 			print $sql."\n";
 			$stmt = $this->database->prepare($sql);
 			$current_all=1;
 			if(count($clause) > 0)
 			{
 				foreach($clause as $name=>$value)
 				{
-				    if($value[0] == "is" || $value[0] == "IS") {
-				        continue;
-				    }
 					if(is_array($value))
 					{
+						if($value[0] == "is" || $value[0] == "IS") {
+							continue;
+						}
 						$value=$value[2];
 					}
-				// 	print "-->". $value."\n";
 					$stmt->bindValue($current_all,$value,PDO::PARAM_STR);
 					$current_all++;
 				}
@@ -335,9 +346,10 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
+
 	public function delete($table,$clause=[])
 	{
 		try
@@ -358,12 +370,12 @@ class database
 						$do=$value[1];
 						$value=$value[2];
 					}
-    				$sql.=$name . " ". $operator ." ";
+					$sql.=$name . " ". $operator ." ";
 					if($operator == "IS" || $operator == "is") {
-    					$sql.=$value;
+						$sql.=$value;
 					}
 					else {
-    					$sql.="? ";
+						$sql.="? ";
 					}
 					if($current != $count-1)
 					{
@@ -379,11 +391,11 @@ class database
 			{
 				foreach($clause as $name=>$value)
 				{
-				    if($value[0] == "is" || $value[0] == "IS") {
-				        continue;
-				    }
 					if(is_array($value))
 					{
+						if($value[0] == "is" || $value[0] == "IS") {
+							continue;
+						}
 						$value=$value[2];
 					}
 					$stmt->bindValue($current_all,$value,PDO::PARAM_STR);
@@ -394,9 +406,10 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
+
 	public function insert($table,$values)
 	{
 		try
@@ -433,9 +446,10 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
+
 	public function update($table,$clause,$values)
 	{
 		try
@@ -468,7 +482,13 @@ class database
 						$do=$value[1];
 						$value=$value[2];
 					}
-					$sql.=$name . " ". $operator ." ? ";
+					$sql.=$name . " ". $operator ." ";
+					if($operator == "IS" || $operator == "is") {
+						$sql.=$value;
+					}
+					else {
+						$sql.="? ";
+					}
 					if($current != $count-1)
 					{
 						$sql.=" ".$do." ";
@@ -493,6 +513,9 @@ class database
 				{
 					if(is_array($value))
 					{
+						if($value[0] == "is" || $value[0] == "IS") {
+							continue;
+						}
 						$value=$value[2];
 					}
 					$stmt->bindValue($current_all,$value,PDO::PARAM_STR);
@@ -503,7 +526,7 @@ class database
 		}
 		catch(PDOException $e)
 		{
-			$this->error_page($e->getMessage());
+			$this->error_page($e->getMessage(), isset($sql) ? $sql : null);
 		}
 	}
 }
